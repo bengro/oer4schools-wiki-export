@@ -36,26 +36,47 @@ const prepare = (results) => {
             content: result[0].text
         }
     })
-}
+};
+
+const removeDomElement = (elementToRemove) => {
+    try {
+        elementToRemove.parentNode.removeChild(elementToRemove);
+    } catch (exeption) {
+        console.error('Could not remove ', elementToRemove, error);
+    }
+};
 
 const clean = (results) => {
     return results.map(result => {
         console.log('clean html up for ' + result.file);
-        const dom = new jsdom.JSDOM(result.content);
-        let elementToRemove = dom.window.document.querySelector("#mw-content-text");
-        elementToRemove.parentNode.removeChild(elementToRemove);
+        const dom = new jsdom.JSDOM(result.content.replace(/\u00a0/g, " "));
+
+        removeDomElement(dom.window.document.querySelector("#mw-content-text"));
+        removeDomElement(dom.window.document.querySelector(".printfooter"));
+        removeDomElement(dom.window.document.querySelector(".catlinks"));
+        removeDomElement(dom.window.document.querySelector("#mw-navigation"));
+        removeDomElement(dom.window.document.querySelector("#footer"));
+        removeDomElement(dom.window.document.querySelector(".sidebarstyle-three"));
+        removeDomElement(dom.window.document.querySelector("#topcontent"));
+        removeDomElement(dom.window.document.querySelector("#siteNotice"));
+        removeDomElement(dom.window.document.querySelector("#top"));
+        removeDomElement(dom.window.document.querySelector("#jump-to-nav"));
+        removeDomElement(dom.window.document.querySelector("#contentSub"));
+        removeDomElement(dom.window.document.querySelector("#siteSub"));
+
         fs.writeFileSync(result.file, dom.serialize());
+
         return {
             htmlFile: result.file,
             directory: result.directory
         };
     })
-}
+};
 
 const convert = (results) => {
     results.map(result => {
         const path = result.htmlFile.split('index.html')[0];
-        const outputFile = `${path}/${result.directory}.docx`;
+        const outputFile = `${path}${result.directory}.docx`;
         const options = {cwd: path};
         nrc.run(`pandoc -f html -t docx -o ${outputFile} index.html`, options);
         console.log(`generated ${outputFile}`);
