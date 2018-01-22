@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "jsdom": "^11.5.1",
-    "node-pandoc": "^0.3.0",
+    "node-run-cmd": "^1.0.1",
     "website-scraper": "^3.3.2"
   }
 }

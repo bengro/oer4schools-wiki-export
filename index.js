@@ -1,6 +1,6 @@
 const websiteScraper = require('website-scraper');
 const jsdom = require("jsdom");
-const pandoc = require('node-pandoc');
+const nrc = require('node-run-cmd');
 const fs = require('fs');
 
 const pages = [
@@ -26,7 +26,7 @@ const scrape = async (page) => {
     return websiteScraper(options);
 };
 
-function prepare(results) {
+const prepare = (results) => {
     return results.map(result => {
         const directory = extractTitle(result[0].url);
         const filePath = `${tmpDir}${directory}/index.html`;
@@ -38,7 +38,7 @@ function prepare(results) {
     })
 }
 
-function clean(results) {
+const clean = (results) => {
     return results.map(result => {
         console.log('clean html up for ' + result.file);
         const dom = new jsdom.JSDOM(result.content);
@@ -52,18 +52,17 @@ function clean(results) {
     })
 }
 
-function convert(results) {
+const convert = (results) => {
     results.map(result => {
-        const outputFile = `${result.htmlFile.split('index.html')[0]}/${result.directory}.docx`;
-        const args = `-f html -t docx -o ${outputFile}`;
-        pandoc(result.htmlFile, args, (error, result) => {
-            if (error) {
-                console.error('Pandoc step failed: ', error);
-                return
-            }
+        const path = result.htmlFile.split('index.html')[0];
+        const outputFile = `${path}/${result.directory}.docx`;
 
-            console.log('Word file created!', result);
-        });
+        var commands = [
+            `pandoc -f html -t docx -o ${outputFile} index.html`
+        ];
+        var options = {cwd: path};
+        nrc.run(commands, options);
+
     })
 }
 
