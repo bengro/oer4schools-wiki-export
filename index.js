@@ -56,15 +56,11 @@ const convert = (results) => {
     results.map(result => {
         const path = result.htmlFile.split('index.html')[0];
         const outputFile = `${path}/${result.directory}.docx`;
-
-        var commands = [
-            `pandoc -f html -t docx -o ${outputFile} index.html`
-        ];
-        var options = {cwd: path};
-        nrc.run(commands, options);
-
-    })
-}
+        const options = {cwd: path};
+        nrc.run(`pandoc -f html -t docx -o ${outputFile} index.html`, options);
+        console.log(`generated ${outputFile}`);
+    });
+};
 
 const extractTitle = (page) => {
     const filenameRegex = /OER4Schools\/(.*)\?printable=yes$/;
