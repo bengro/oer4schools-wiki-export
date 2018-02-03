@@ -38,33 +38,61 @@ const prepare = (results) => {
     })
 };
 
-const removeDomElement = (elementToRemove) => {
-    try {
-        elementToRemove.parentNode.removeChild(elementToRemove);
-    } catch (exeption) {
-        console.error('Could not remove ', elementToRemove, error);
-    }
+const removeDomElement = (elementsToRemove) => {
+    elementsToRemove.forEach(element => {
+        try {
+            element.parentNode.removeChild(element);
+        } catch (exeption) {
+            console.error('Could not remove ', element, error);
+        }
+    });
+};
+
+const wrapWithTable = (dom, elementsToWrap) => {
+    elementsToWrap.forEach(element => {
+        const table = dom.window.document.createElement('table');
+        table.setAttribute("class", "table-style");
+        table.setAttribute("border", "1");
+        const row = dom.window.document.createElement('tr');
+        const column = dom.window.document.createElement('td');
+        column.appendChild(element.cloneNode(true));
+        row.appendChild(column);
+        table.appendChild(row);
+
+        element.parentNode.replaceChild(table, element);
+    });
+};
+
+const cleansedMarkup = (content) => {
+    const cleansedContent = content;
+    cleansedContent.replace(/\u00a0/g, " ");
+    cleansedContent.replace('â', "");
+    cleansedContent.replace('&nbsp;', " ");
+    return cleansedContent;
 };
 
 const clean = (results) => {
     return results.map(result => {
         console.log('clean html up for ' + result.file);
-        const dom = new jsdom.JSDOM(result.content.replace(/\u00a0/g, " "));
+        const dom = new jsdom.JSDOM(cleansedMarkup(result.content));
 
-        removeDomElement(dom.window.document.querySelector("#mw-content-text"));
-        removeDomElement(dom.window.document.querySelector(".printfooter"));
-        removeDomElement(dom.window.document.querySelector(".catlinks"));
-        removeDomElement(dom.window.document.querySelector("#mw-navigation"));
-        removeDomElement(dom.window.document.querySelector("#footer"));
-        removeDomElement(dom.window.document.querySelector(".sidebarstyle-three"));
-        removeDomElement(dom.window.document.querySelector("#topcontent"));
-        removeDomElement(dom.window.document.querySelector("#siteNotice"));
-        removeDomElement(dom.window.document.querySelector("#top"));
-        removeDomElement(dom.window.document.querySelector("#jump-to-nav"));
-        removeDomElement(dom.window.document.querySelector("#contentSub"));
-        removeDomElement(dom.window.document.querySelector("#siteSub"));
+        removeDomElement(dom.window.document.querySelectorAll("#mw-content-text"));
+        removeDomElement(dom.window.document.querySelectorAll(".printfooter"));
+        removeDomElement(dom.window.document.querySelectorAll(".catlinks"));
+        removeDomElement(dom.window.document.querySelectorAll("#mw-navigation"));
+        removeDomElement(dom.window.document.querySelectorAll("#footer"));
+        removeDomElement(dom.window.document.querySelectorAll(".sidebarstyle-three"));
+        removeDomElement(dom.window.document.querySelectorAll("#topcontent"));
+        removeDomElement(dom.window.document.querySelectorAll("#siteNotice"));
+        removeDomElement(dom.window.document.querySelectorAll("#top"));
+        removeDomElement(dom.window.document.querySelectorAll("#jump-to-nav"));
+        removeDomElement(dom.window.document.querySelectorAll("#contentSub"));
+        removeDomElement(dom.window.document.querySelectorAll("#siteSub"));
 
-        fs.writeFileSync(result.file, dom.serialize());
+        wrapWithTable(dom, dom.window.document.querySelectorAll('#toc'));
+        wrapWithTable(dom, dom.window.document.querySelectorAll('.divStart'));
+
+        fs.writeFileSync(result.file, dom.serialize(), {encoding: 'utf8'});
 
         return {
             htmlFile: result.file,
@@ -77,7 +105,7 @@ const convert = (results) => {
     results.map(result => {
         const path = result.htmlFile.split('index.html')[0];
         const outputFile = `${path}${result.directory}.docx`;
-        const options = {cwd: path};
+        const options = { cwd: path };
         nrc.run(`pandoc -f html -t docx -o ${outputFile} index.html`, options);
         console.log(`generated ${outputFile}`);
     });
