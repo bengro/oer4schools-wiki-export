@@ -9,6 +9,13 @@ const pages = [
     'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Activity_planning_and_reflection?printable=yes',
     'http://oer.educ.cam.ac.uk/wiki/OER4Schools/ICTs_in_interactive_teaching?printable=yes',
     'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Effective_use_of_ICT?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Leadership_for_Learning?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Whole_class_dialogue_and_effective_questioning?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Introduction_to_whole_class_dialogue_and_effective_questioning?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Questioning?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/More_on_questioning?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Concept_mapping?printable=yes',
+    'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Engaging_the_community?printable=yes',
 ];
 
 const tmpDir = '/tmp/scraping/';
@@ -19,6 +26,9 @@ const scrape = async (page) => {
     const options = {
         urls: [page],
         directory: path,
+        request: {
+            encoding: 'utf8',
+        }
     };
 
     console.log(`save ${page} to ${path}`);
@@ -63,18 +73,11 @@ const wrapWithTable = (dom, elementsToWrap) => {
     });
 };
 
-const cleansedMarkup = (content) => {
-    const cleansedContent = content;
-    cleansedContent.replace(/\u00a0/g, " ");
-    cleansedContent.replace('â', "");
-    cleansedContent.replace('&nbsp;', " ");
-    return cleansedContent;
-};
-
 const clean = (results) => {
     return results.map(result => {
         console.log('clean html up for ' + result.file);
-        const dom = new jsdom.JSDOM(cleansedMarkup(result.content));
+        console.log(result.content);
+        const dom = new jsdom.JSDOM(result.content);
 
         removeDomElement(dom.window.document.querySelectorAll("#mw-content-text"));
         removeDomElement(dom.window.document.querySelectorAll(".printfooter"));
@@ -92,7 +95,7 @@ const clean = (results) => {
         wrapWithTable(dom, dom.window.document.querySelectorAll('#toc'));
         wrapWithTable(dom, dom.window.document.querySelectorAll('.divStart'));
 
-        fs.writeFileSync(result.file, dom.serialize(), {encoding: 'utf8'});
+        fs.writeFileSync(result.file, dom.serialize(), { encoding: 'utf8' });
 
         return {
             htmlFile: result.file,
