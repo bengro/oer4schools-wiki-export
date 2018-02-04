@@ -26,9 +26,6 @@ const scrape = async (page) => {
     const options = {
         urls: [page],
         directory: path,
-        request: {
-            encoding: 'utf8',
-        }
     };
 
     console.log(`save ${page} to ${path}`);
@@ -76,7 +73,6 @@ const wrapWithTable = (dom, elementsToWrap) => {
 const clean = (results) => {
     return results.map(result => {
         console.log('clean html up for ' + result.file);
-        console.log(result.content);
         const dom = new jsdom.JSDOM(result.content);
 
         removeDomElement(dom.window.document.querySelectorAll("#mw-content-text"));
@@ -117,8 +113,7 @@ const convert = (results) => {
 const extractTitle = (page) => {
     const filenameRegex = /OER4Schools\/(.*)\?printable=yes$/;
     const matches = filenameRegex.exec(page);
-    const fileName = matches[1];
-    return fileName;
+    return matches[1];
 };
 
 Promise
