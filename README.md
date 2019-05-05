@@ -1,16 +1,19 @@
 # oer4schools-wiki-export
 
-This repository contains some scripts to 
-* extract a WikiMedia article from oer4schools.org
-* clean media wiki specific html
+A script to export oer4schools wiki articles to Word documents.
+
+Steps involved:
+* extract a WikiMedia article from oer4schools.org as listed in `index.js`
+* clean media wiki specific html to remove visual noise
 * export to `docx` using pandoc
 
 ## Requirements
-* Node installed
-* [Pandoc](https://pandoc.org/) installed
+* Install node (tested with version 12)
+* Install [Pandoc](https://pandoc.org/) (`brew install pandoc` on OSX)
 
-## Run
+## Generate Word documents
 ```
 node index.js
 ```
 
+Collect the files in `/tmp/scraping/.
