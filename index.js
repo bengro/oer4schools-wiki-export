@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const pages = [
+  // Unit 1 - 4
   'http://oer.educ.cam.ac.uk/wiki/OER4Schools/What_is_interactive_teaching?printable=yes',
   'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Introduction_to_interactive_teaching_with_ICT?printable=yes',
   'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Activity_planning_and_reflection?printable=yes',
@@ -30,6 +31,32 @@ const pages = [
   'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Formative_feedback?printable=yes',
   'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Peer_and_self-assessment?printable=yes',
   'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Review_of_AfL_and_lesson_pacing?printable=yes',
+
+  // Unit 5 - 6
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Enquiry-based_learning_and_project_work?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Introduction_to_enquiry_based_learning?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Starting_the_enquiry_based_learning_process?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Collecting_and_interpreting_information?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Collecting_and_interpreting_information_part_2?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Presenting_findings_of_enquiries?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Into_the_future?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Programme_review_and_action_research?printable=yes',
+
+  // Unit 7 - 8
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Appendix?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Techniques?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/SessionTemplate?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Video?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Induction_sessions?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Workshop_for_school_leaders?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Introductory_workshop?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/eLA2013?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/mlw2014?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/eLA2014?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/Faculty_Workshop_May_2014?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/AVU2014?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/AVU2014/en?printable=yes',
+  'http://oer.educ.cam.ac.uk/wiki/OER4Schools/AVU2014/fr?printable=yes',
 ];
 
 const tmpDir = '/tmp/scraping/';
